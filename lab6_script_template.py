@@ -1,5 +1,7 @@
 import requests
 import hashlib
+import subprocess
+import os
 
 def main():
 
@@ -45,12 +47,18 @@ def installer_ok(installer_data, expected_sha256):
         return False
 
 def save_installer(installer_data):
-    return
+    installer_filename = 'vlc-3.0.18-win64.exe'
+    installer_path = os.path.join(os.getenv('TEMP'), installer_filename)
+    with open(installer_path, 'wb') as file:
+        file.write(installer_data)
+    return installer_path
 
 def run_installer(installer_path):
+    subprocess.run(["runas", "/user:Administrator", installer_path, '/L=1033', '/S'])
     return
     
 def delete_installer(installer_path):
+    os.remove(installer_path)
     return
 
 if __name__ == '__main__':
